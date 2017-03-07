@@ -1,5 +1,6 @@
 body { 
 	background: silver;
+	position: relative;
 }
 .wrapper {
 	display: table;
@@ -14,11 +15,22 @@ body {
 	height: 143px;
 	box-shadow: inset 1px 1px 1px #000;
 }
-.squere div {
+.squere div, .stock {
 	position: absolute;
-	background: url('../img/match2.png');
+	/*background: url('../img/match2.png');*/
+	top: 0px;
+	left: 0px;
 	width: 142px;
 	height: 13px;
+}
+.stock {
+	background: url('../img/match2.png');
+	top: 100px;
+	left: 0px;
+	transform: rotate(0deg);
+	/*border: 1px solid #000;*/
+	cursor: pointer;
+	z-index: 10;
 }
 .right {
 	top: 71px;
