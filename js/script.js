@@ -8,7 +8,7 @@ function setMatrix(num1, num2) {
   wrapper.classList.add('wrapper');  
   for (var i = 0; i < num1; i++) {
   	for (var y = 0; y < num2; y++) {
-  	  text += '<div class="squere"><div class="top"></div><div class="right" onmousedown="drag(this)"></div><div class="bottom"></div><div class="left"></div><div class="diagonal-left"></div><div class="diagonal-right"></div></div>';
+  	  text += '<div class="squere"><div class="top"></div><div class="right"></div><div class="bottom"></div><div class="left"></div><div class="diagonal-left"></div><div class="diagonal-right"></div></div>';
   	}
   	text += '<br>';
   }
@@ -49,12 +49,33 @@ function createMatches(num) {
     else
       return event.buttons != 0;
   }
-
  //------------------------
  function rotateMatch(el) {
-  var rotate = getComputedStyle(el);
-  rotate = rotate.transformRotate;
-  console.log('rotate', rotate)
-  el.style.transform = 'matrix(1, 0, 0, 1, 0, 1)'
+  el.style.transition = 'all 1s ease';
+  var rotate = getRotate(el) + 90;
+
+  // el.style.transform = 'rotate(135deg)';
+  console.log(rotate);
+  // rotate += 135;
+  console.log(rotate);
+  setTimeout(function() {
+   el.style.transform = 'rotate('+rotate+'deg)';
+  }, 100)
+  
+  setTimeout(function() {
+    el.style.transition = 'all 0s ease';
+  }, 1000)
+
  }
  //=============================
+ function getRotate(el) {
+    var style = el.getAttribute('style');
+    if ( style.indexOf('rotate(') != -1 ) {
+      var num = style.indexOf('rotate(') + 7;
+      return Number(style.substr(num, 3));;
+    } else {
+      el.style.transform = 'rotate(90deg)';
+      return 45;
+    }
+
+ }

@@ -28,12 +28,12 @@ body {
 	top: 100px;
 	left: 0px;
 	transform: rotate(0deg);
-	/*border: 1px solid #000;*/
 	cursor: pointer;
 	z-index: 10;
-}
-.stock:nth-child(2) {
-	top: 120px;
+/*	-webkit-transition: all 1s ease; 
+	-moz-transition: all 1s ease; 
+	-o-transition: all 1s ease;
+	transition: all 1s ease; */
 }
 .right {
 	top: 71px;
