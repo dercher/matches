@@ -1,6 +1,8 @@
 // document.createElement();getElementById();getElementsByTagName();getElementsByName();getElementsByClassName();querySelector();querySelectorAll();el.classList.add();el.innerHTML = "";e.style.background = '';el.appendChild();setInterval();setTimeout();clearInterval();
+var positions = [];
 setMatrix(4, 5);   
-createMatches(10);
+createMatches(20);
+setMatchPlaces(4, 5); 
 //=============== FUNCTIONS ============
 function setMatrix(num1, num2) {
   var wrapper = document.createElement('div');
@@ -15,16 +17,41 @@ function setMatrix(num1, num2) {
   wrapper.innerHTML = text;
   document.getElementsByTagName('body')[0].appendChild(wrapper);
 }
+//--------------------------------------
+function setMatchPlaces(num1, num2) {
+  var squeres = document.querySelectorAll('.squere');
+  for (var i = 0; i < squeres.length; i++) {
+   var rect = squeres[i].getBoundingClientRect();
+   positions.push([rect.top, rect.right, rect.bottom, rect.left]) ;  
+  }
+   moveMatches(positions);
+}
 //------------------------------------------
 function createMatches(num) {
   var box = document.createElement('div');
   box.classList.add('box');
   var text = '', top = 0;
   for (var i = 0; i < num; i++) {
-    text += '<div class="stock" onmousedown="moveMatch(event, this)" style="top: ' +(top+=20)+ 'px" ondblclick="rotateMatch(this)"></div>'
+    text += '<div class="match" onmousedown="moveMatch(event, this)" style="top: ' +(top+=20)+ 'px" ondblclick="rotateMatch(this)"></div>'
   }
   box.innerHTML = text;
   document.getElementsByTagName('body')[0].appendChild(box);
+}
+//------------------------------------
+function moveMatches(arr) {
+  var matches = document.querySelectorAll('.match');
+  for (var i = 0; i < matches.length; i++) {
+    matches[i].style.transition = 'all 1s ease';
+  }
+  for (var i = 0; i < matches.length; i++) {
+    matches[i].style.top = positions[i][0] - 40 + 'px';
+    matches[i].style.left = positions[i][3] + 'px';
+  }
+  setTimeout(function() {
+   for (var i = 0; i < matches.length; i++) {
+    matches[i].style.transition = 'all 0s ease';
+    }
+   }, 1000)
 }
 //-------------------- MOUSEMOVE ---------
  function moveMatch(event, elem) {
@@ -52,20 +79,13 @@ function createMatches(num) {
  //------------------------
  function rotateMatch(el) {
   el.style.transition = 'all 1s ease';
-  var rotate = getRotate(el) + 90;
-
-  // el.style.transform = 'rotate(135deg)';
-  console.log(rotate);
-  // rotate += 135;
-  console.log(rotate);
+  var rotate = getRotate(el) + 45;
   setTimeout(function() {
    el.style.transform = 'rotate('+rotate+'deg)';
   }, 100)
-  
   setTimeout(function() {
     el.style.transition = 'all 0s ease';
   }, 1000)
-
  }
  //=============================
  function getRotate(el) {
@@ -75,7 +95,7 @@ function createMatches(num) {
       return Number(style.substr(num, 3));;
     } else {
       el.style.transform = 'rotate(90deg)';
-      return 45;
+      return 90;
     }
-
  }
+ //----------------------------
