@@ -14,6 +14,7 @@ function setMatrix(num1, num2) {
   	html += '<br>';
   }
   wrapper.innerHTML = html;
+  all = num1 * num2 * 4;
   placeMatches(wrapper);
 }
 //--------------------------------------
@@ -46,6 +47,30 @@ function placeMatches(el) {
   if (property == 'diagonal') return [style.top, style.left, getRotate(el)];
  }
 //------------------------------------
+displayNumbers()
+function displayNumbers(argument) {
+var els = document.querySelectorAll('.d');
+  for (var i = 0; i < els.length; i++) {
+    // els[i].style.height = '50px';
+    els[i].innerHTML = i;
+  }
+}
+//-------------------------------------
+var alls = [];
+var every = [21, 24, 25, 28, 29, 44, 45, 48, 49, 52, 53, 56, 57, 68, 72, 76];
+buildPic(all);
+function buildPic(all) {
+  for (var i = 0; i < all; i++) {
+    if ( i == every[0] ) { 
+      alls[i] = every[0];
+      every.shift();
+    } else {
+       alls[i] = 0;
+    }
+  }
+  return alls;
+}
+//--------------------------------
 function moveMatches() {
   var matches = document.querySelectorAll('.match');
   var count = 0, fore = 0;
@@ -54,15 +79,17 @@ function moveMatches() {
   positions.push( getElemStyle( document.querySelectorAll('.diagonal-left')[0], 'diagonal') );
   console.log('positions', positions);
   var start = setInterval(function() {
-    matches[count].style.transition = 'all 1s ease';
-    matches[count].style.top = positions[fore][0];
-    matches[count].style.left = positions[fore][1];
-    matches[count].style.transform = 'rotate(' +positions[fore][2]+ 'deg)';
+    if ( count == alls[count] ) {
+      matches[count].style.transition = 'all 1s ease';
+      matches[count].style.top = positions[fore][0];
+      matches[count].style.left = positions[fore][1];
+      matches[count].style.transform = 'rotate(' +positions[fore][2]+ 'deg)';
+    }
     
     fore++;
     if (fore >= 4) { fore = 0; }
     if(++count >= matches.length) clearInterval(start);
-   }, 50)  
+   }, 25)  
   
   setTimeout(function() {
    for (var i = 0; i < matches.length; i++) {

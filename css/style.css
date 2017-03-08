@@ -2,6 +2,8 @@ body {
 	background: silver;
 	position: relative;
 	padding: 0;
+	overflow-x: hidden;
+	overflow-y: hidden;
 }
 .wrapper {
 	display: table;
@@ -22,7 +24,9 @@ body {
 	left: 0px;
 	width: 142px;
 	height: 13px;
+	line-height: 13px;
 	z-index: 10;
+	color: #000;
 }
 .match {
 	position: absolute;
