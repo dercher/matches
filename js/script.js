@@ -1,52 +1,72 @@
 // document.createElement();getElementById();getElementsByTagName();getElementsByName();getElementsByClassName();querySelector();querySelectorAll();el.classList.add();el.innerHTML = "";e.style.background = '';el.appendChild();setInterval();setTimeout();clearInterval();
-var positions = [];
+var positions = [], all = 0;
 setMatrix(4, 5);   
-createMatches(20);
-setMatchPlaces(4, 5); 
+// createMatches(40); 
+// setMatchPlaces(4, 5); 
 //=============== FUNCTIONS ============
 function setMatrix(num1, num2) {
   var wrapper = document.createElement('div');
-  var text = ''
-  wrapper.classList.add('wrapper');  
+  var html = '';
+  wrapper.classList.add('wrapper'); 
+  document.getElementsByTagName('body')[0].appendChild(wrapper); 
   for (var i = 0; i < num1; i++) {
   	for (var y = 0; y < num2; y++) {
-  	  text += '<div class="squere"><div class="top"></div><div class="right"></div><div class="bottom"></div><div class="left"></div><div class="diagonal-left"></div><div class="diagonal-right"></div></div>';
+  	  html += '<div class="squere"><div class="d top"></div><div class="d right"></div><div class="d diagonal-left"></div><div class="d diagonal-right"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div></div>';
   	}
-  	text += '<br>';
+  	html += '<br>';
   }
-  wrapper.innerHTML = text;
-  document.getElementsByTagName('body')[0].appendChild(wrapper);
+  wrapper.innerHTML = html;
+  // all = num1 * num2 * 4;
+  placeMatches(wrapper);
+
 }
 //--------------------------------------
-function setMatchPlaces(num1, num2) {
-  var squeres = document.querySelectorAll('.squere');
-  for (var i = 0; i < squeres.length; i++) {
-   var rect = squeres[i].getBoundingClientRect();
-   positions.push([rect.top, rect.right, rect.bottom, rect.left]) ;  
+function placeMatches(el) {
+  var width = getElemWidth( document.querySelectorAll('.squere')[0] );
+  var rect = el.getBoundingClientRect();
+  var dist = rect.left, top = 0;
+  var matches = document.querySelectorAll('.match');
+  console.log('matches.length', matches.length)
+  for (var i = 0, count = 1; i < matches.length; i++, count++) {
+    matches[i].style.left = -dist + 'px';
+    matches[i].style.top = top + 'px';
+    top += 10; 
+    if ( count % 4 == 0 ) dist += width;
+    if ( count % 20 == 0 ) {
+      dist = rect.left;
+      top = 65;
+    }
   }
-   moveMatches(positions);
 }
+//-----------------------------------
+ function getElemWidth(el) {
+  var width = getComputedStyle(el);
+  width = width.width;
+  return Number(width.substr(0, width.length - 2));
+ }
 //------------------------------------------
-function createMatches(num) {
-  var box = document.createElement('div');
-  box.classList.add('box');
-  var text = '', top = 0;
-  for (var i = 0; i < num; i++) {
-    text += '<div class="match" onmousedown="moveMatch(event, this)" style="top: ' +(top+=20)+ 'px" ondblclick="rotateMatch(this)"></div>'
-  }
-  box.innerHTML = text;
-  document.getElementsByTagName('body')[0].appendChild(box);
-}
+// function createMatches(num) {
+//   var box = document.createElement('div');
+//   box.classList.add('box');
+//   var text = '', top = 0;
+//   for (var i = 0; i < num; i++) {
+//     text += '<div class="match" onmousedown="moveMatch(event, this)" style="top: ' +(top+=12)+ 'px" ondblclick="rotateMatch(this)"></div>'
+//   }
+//   box.innerHTML = text;
+//   document.getElementsByTagName('body')[0].appendChild(box);
+//   moveMatches();
+// }
 //------------------------------------
 function moveMatches(arr) {
   var matches = document.querySelectorAll('.match');
-  for (var i = 0; i < matches.length; i++) {
-    matches[i].style.transition = 'all 1s ease';
-  }
-  for (var i = 0; i < matches.length; i++) {
-    matches[i].style.top = positions[i][0] - 40 + 'px';
-    matches[i].style.left = positions[i][3] + 'px';
-  }
+  var count = 0;
+  var start = setInterval(function() {
+  var top = document.querySelectorAll('.top')[0];
+     
+      if(++count >= matches.length) clearInterval(start);
+   }, 200) 
+  
+  
   setTimeout(function() {
    for (var i = 0; i < matches.length; i++) {
     matches[i].style.transition = 'all 0s ease';
@@ -54,18 +74,28 @@ function moveMatches(arr) {
    }, 1000)
 }
 //-------------------- MOUSEMOVE ---------
+function replaceMatches( matches, count, top, left, rotate ) {
+
+
+
+}
+
  function moveMatch(event, elem) {
+  var rect = elem.parentNode.getBoundingClientRect();
+  var distBack = rect.left;
+  console.log('rect.left', rect.left)
     if (event.which == 1) {
       addEventListener('mousemove', moved );
-      event.preventDefault(); // Предотвращает выделение
+      event.preventDefault(); 
     }
 
    function moved (event) {
-      if (!buttonPressed(event)) {  //-- удаляем событие чтоб можно было цеплять следующий элемент
+      if (!buttonPressed(event)) {  
         removeEventListener('mousemove', moved);
       } else {
-       elem.style.left = event.pageX - 50 + 'px';
-       elem.style.top = event.pageY - 42 + 'px';
+       elem.style.transition = 'all 0s ease';
+       elem.style.left = event.pageX - 50 - distBack + 'px';
+       elem.style.top = event.pageY - 22 + 'px';
       }
    }
  }

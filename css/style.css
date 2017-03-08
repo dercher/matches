@@ -1,6 +1,7 @@
 body { 
 	background: silver;
 	position: relative;
+	padding: 0;
 }
 .wrapper {
 	display: table;
@@ -15,12 +16,14 @@ body {
 	height: 135px;
 	box-shadow: inset 1px 1px 1px #000;
 }
-.squere div {
+.d {
+	background: green;
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	width: 142px;
 	height: 13px;
+	z-index: 10;
 }
 .match {
 	position: absolute;
@@ -32,21 +35,31 @@ body {
 	z-index: 10;
     width: 142px;
 	height: 13px;
-/*	-webkit-transition: all 1s ease; 
-	-moz-transition: all 1s ease; 
-	-o-transition: all 1s ease;
-	transition: all 1s ease; */
 }
 .right {
 	top: 71px;
 	left: 71px;
 	transform: rotate(90deg);
 }
-.box {
+.top {
+	top: 0;
+	left: 0;
+}
+.diagonal-left {
+	top: 67px;
+	left: 0px;
+	transform: rotate(135deg);
+}
+.diagonal-right {
+    top: 66px;
+    left: 0px;
+    transform: rotate(227deg);
+}
+/*.box {
 	background: orange;
 	position: absolute;
-	top: 20px;
+	top: 0px;
 	left: 0;
 	width: 30px;
 	height: 100px;
-}
+}*/
