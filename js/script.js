@@ -1,11 +1,12 @@
 // document.createElement();getElementById();getElementsByTagName();getElementsByName();getElementsByClassName();querySelector();querySelectorAll();el.classList.add();el.innerHTML = "";e.style.background = '';el.appendChild();setInterval();setTimeout();clearInterval();
-var positions = [['0px', '0px', '0px']];
 var alls = [], all = 0;;
-var every = [21, 24, 25, 28, 29, 44, 45, 48, 49, 52, 53, 56, 57, 68, 72, 76];
+var first = [21, 24, 25, 28, 29,         44, 45, 48, 49, 52, 53, 56, 57, 68, 72, 76];
+var answer= [21, 24, 25,     29, 29, 29, 44, 45, 48, 49, 52, 53, 56, 57, 68,     76];
 var task = 'Из спичек сложена фигура, изображённая на рисунке. Как переложить две спички так, чтобы получилось ровно четыре одинаковых квадрата с длиной стороны, равной длине спички?';
 displayTask(task);
 setMatrix(4, 5);
-buildPic(all);   
+buildPic(all, first);
+builAnswer();   
 //=============== FUNCTIONS ============
 function setMatrix(num1, num2) {
   var wrapper = document.createElement('div');
@@ -39,7 +40,7 @@ function placeMatches(el) {
       top = 65;
     }
   }
-  moveMatches();
+  moveMatches(alls);
 }
 //-----------------------------------
  function getElemStyle(el, property) {
@@ -61,11 +62,15 @@ var els = document.querySelectorAll('.d');
   }
 }
 //-------------------------------------
-function buildPic(all) {
+function buildPic(all, array) {
+  var arr = [];
+  for (var i = 0; i < array.length; i++) {
+    arr[i] = array[i]
+  }
   for (var i = 0; i < all; i++) {
-    if ( i == every[0] ) { 
-      alls[i] = every[0];
-      every.shift();
+    if ( i == arr[0] ) { 
+      alls[i] = arr[0];
+      arr.shift();
     } else {
        alls[i] = 0;
     }
@@ -74,13 +79,14 @@ function buildPic(all) {
   return alls;
 }
 //--------------------------------
-function moveMatches() {
+function moveMatches(alls) {
+  var positions = [['0px', '8px', '0px']];
   var matches = document.querySelectorAll('.match');
   var count = 0, fore = 0;
   positions.push( getElemStyle( document.querySelectorAll('.right')[0], 'topLeft') );
   positions.push( getElemStyle( document.querySelectorAll('.diagonal-right')[0], 'diagonal') );
   positions.push( getElemStyle( document.querySelectorAll('.diagonal-left')[0], 'diagonal') );
-  console.log('positions', positions);
+
   var start = setInterval(function() {
     if ( count == alls[count] ) {
       matches[count].style.transition = 'all 1s ease';
@@ -88,7 +94,7 @@ function moveMatches() {
       matches[count].style.left = positions[fore][1];
       matches[count].style.transform = 'rotate(' +positions[fore][2]+ 'deg)';
     }
-    
+
     fore++;
     if (fore >= 4) { fore = 0; }
     if(++count >= matches.length) clearInterval(start);
@@ -152,9 +158,23 @@ function moveMatches() {
  }
 //----------------------------
 function displayTask(task) {
-  var div = document.createElement('div');
-  div.classList.add('task');
-  div.innerHTML = task;
-  document.getElementsByTagName('body')[0].appendChild(div);
+  createElem('div', 'task', task, document.getElementsByTagName('body')[0], false)
 }
 //------------------------------
+function builAnswer(argument) {
+ createElem('div', 'answer', 'Show answer', document.querySelector('.wrapper'), ['onclick', 'displayAnswer()'])
+}
+//--------------------------
+function createElem(tag, Class, html, parent, atr) {
+ var el = document.createElement(tag); 
+ if(Class) el.classList.add(Class);
+ if(html) el.innerHTML = html;
+ if (atr) {el.setAttribute(atr[0], atr[1])}
+  parent.appendChild(el);
+}
+//-------------------------
+function displayAnswer() {
+  alls = [];
+  buildPic(all, answer);
+  moveMatches(alls);
+}
