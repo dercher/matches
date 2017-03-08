@@ -1,8 +1,6 @@
 // document.createElement();getElementById();getElementsByTagName();getElementsByName();getElementsByClassName();querySelector();querySelectorAll();el.classList.add();el.innerHTML = "";e.style.background = '';el.appendChild();setInterval();setTimeout();clearInterval();
-var positions = [], all = 0;
+var positions = [['0px', '0px', '0px']], all = 0;
 setMatrix(4, 5);   
-// createMatches(40); 
-// setMatchPlaces(4, 5); 
 //=============== FUNCTIONS ============
 function setMatrix(num1, num2) {
   var wrapper = document.createElement('div');
@@ -11,18 +9,16 @@ function setMatrix(num1, num2) {
   document.getElementsByTagName('body')[0].appendChild(wrapper); 
   for (var i = 0; i < num1; i++) {
   	for (var y = 0; y < num2; y++) {
-  	  html += '<div class="squere"><div class="d top"></div><div class="d right"></div><div class="d diagonal-left"></div><div class="d diagonal-right"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div></div>';
+  	  html += '<div class="squere"><div class="d top"></div><div class="d right" style="transform: rotate(270deg)"></div><div class="d diagonal-left" style="transform: rotate(135deg)"></div><div class="d diagonal-right" style="transform: rotate(227deg)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div><div class="match" onmousedown="moveMatch(event, this)" ondblclick="rotateMatch(this)"></div></div>';
   	}
   	html += '<br>';
   }
   wrapper.innerHTML = html;
-  // all = num1 * num2 * 4;
   placeMatches(wrapper);
-
 }
 //--------------------------------------
 function placeMatches(el) {
-  var width = getElemWidth( document.querySelectorAll('.squere')[0] );
+  var width = getElemStyle( document.querySelectorAll('.squere')[0], 'width' );
   var rect = el.getBoundingClientRect();
   var dist = rect.left, top = 0;
   var matches = document.querySelectorAll('.match');
@@ -37,35 +33,36 @@ function placeMatches(el) {
       top = 65;
     }
   }
+  moveMatches();
 }
 //-----------------------------------
- function getElemWidth(el) {
-  var width = getComputedStyle(el);
-  width = width.width;
-  return Number(width.substr(0, width.length - 2));
+ function getElemStyle(el, property) {
+  var style = getComputedStyle(el);
+  if (property == 'width') {
+    style = style.width;
+    return Number(style.substr(0, style.length - 2));
+  }
+  if (property == 'topLeft') return [style.top, style.left, getRotate(el)];
+  if (property == 'diagonal') return [style.top, style.left, getRotate(el)];
  }
-//------------------------------------------
-// function createMatches(num) {
-//   var box = document.createElement('div');
-//   box.classList.add('box');
-//   var text = '', top = 0;
-//   for (var i = 0; i < num; i++) {
-//     text += '<div class="match" onmousedown="moveMatch(event, this)" style="top: ' +(top+=12)+ 'px" ondblclick="rotateMatch(this)"></div>'
-//   }
-//   box.innerHTML = text;
-//   document.getElementsByTagName('body')[0].appendChild(box);
-//   moveMatches();
-// }
 //------------------------------------
-function moveMatches(arr) {
+function moveMatches() {
   var matches = document.querySelectorAll('.match');
-  var count = 0;
+  var count = 0, fore = 0;
+  positions.push( getElemStyle( document.querySelectorAll('.right')[0], 'topLeft') );
+  positions.push( getElemStyle( document.querySelectorAll('.diagonal-right')[0], 'diagonal') );
+  positions.push( getElemStyle( document.querySelectorAll('.diagonal-left')[0], 'diagonal') );
+  console.log('positions', positions);
   var start = setInterval(function() {
-  var top = document.querySelectorAll('.top')[0];
-     
-      if(++count >= matches.length) clearInterval(start);
-   }, 200) 
-  
+    matches[count].style.transition = 'all 1s ease';
+    matches[count].style.top = positions[fore][0];
+    matches[count].style.left = positions[fore][1];
+    matches[count].style.transform = 'rotate(' +positions[fore][2]+ 'deg)';
+    
+    fore++;
+    if (fore >= 4) { fore = 0; }
+    if(++count >= matches.length) clearInterval(start);
+   }, 50)  
   
   setTimeout(function() {
    for (var i = 0; i < matches.length; i++) {
@@ -74,15 +71,10 @@ function moveMatches(arr) {
    }, 1000)
 }
 //-------------------- MOUSEMOVE ---------
-function replaceMatches( matches, count, top, left, rotate ) {
-
-
-
-}
-
  function moveMatch(event, elem) {
   var rect = elem.parentNode.getBoundingClientRect();
   var distBack = rect.left;
+  var distTop = rect.top;
   console.log('rect.left', rect.left)
     if (event.which == 1) {
       addEventListener('mousemove', moved );
@@ -95,7 +87,7 @@ function replaceMatches( matches, count, top, left, rotate ) {
       } else {
        elem.style.transition = 'all 0s ease';
        elem.style.left = event.pageX - 50 - distBack + 'px';
-       elem.style.top = event.pageY - 22 + 'px';
+       elem.style.top = event.pageY - distTop + 'px';
       }
    }
  }
@@ -107,7 +99,7 @@ function replaceMatches( matches, count, top, left, rotate ) {
       return event.buttons != 0;
   }
  //------------------------
- function rotateMatch(el) {
+ function rotateMatch(el) {   // ------  rotating match by double click
   el.style.transition = 'all 1s ease';
   var rotate = getRotate(el) + 45;
   setTimeout(function() {
