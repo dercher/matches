@@ -1,6 +1,11 @@
 // document.createElement();getElementById();getElementsByTagName();getElementsByName();getElementsByClassName();querySelector();querySelectorAll();el.classList.add();el.innerHTML = "";e.style.background = '';el.appendChild();setInterval();setTimeout();clearInterval();
-var positions = [['0px', '0px', '0px']], all = 0;
-setMatrix(4, 5);   
+var positions = [['0px', '0px', '0px']];
+var alls = [], all = 0;;
+var every = [21, 24, 25, 28, 29, 44, 45, 48, 49, 52, 53, 56, 57, 68, 72, 76];
+var task = 'Из спичек сложена фигура, изображённая на рисунке. Как переложить две спички так, чтобы получилось ровно четыре одинаковых квадрата с длиной стороны, равной длине спички?';
+displayTask(task);
+setMatrix(4, 5);
+buildPic(all);   
 //=============== FUNCTIONS ============
 function setMatrix(num1, num2) {
   var wrapper = document.createElement('div');
@@ -56,9 +61,6 @@ var els = document.querySelectorAll('.d');
   }
 }
 //-------------------------------------
-var alls = [];
-var every = [21, 24, 25, 28, 29, 44, 45, 48, 49, 52, 53, 56, 57, 68, 72, 76];
-buildPic(all);
 function buildPic(all) {
   for (var i = 0; i < all; i++) {
     if ( i == every[0] ) { 
@@ -68,6 +70,7 @@ function buildPic(all) {
        alls[i] = 0;
     }
   }
+  alls[0] = 1;
   return alls;
 }
 //--------------------------------
@@ -136,7 +139,7 @@ function moveMatches() {
     el.style.transition = 'all 0s ease';
   }, 1000)
  }
- //=============================
+//=============================
  function getRotate(el) {
     var style = el.getAttribute('style');
     if ( style.indexOf('rotate(') != -1 ) {
@@ -147,4 +150,11 @@ function moveMatches() {
       return 90;
     }
  }
- //----------------------------
+//----------------------------
+function displayTask(task) {
+  var div = document.createElement('div');
+  div.classList.add('task');
+  div.innerHTML = task;
+  document.getElementsByTagName('body')[0].appendChild(div);
+}
+//------------------------------
